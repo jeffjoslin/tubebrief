@@ -52,42 +52,50 @@ const mockVideos = [
   {
     id: "v1",
     title: "Understanding Neural Networks - Part 1",
-    thumbnail: "/placeholder.svg?height=120&width=200",
-    publishedAt: "2023-05-15",
+    thumbnail: "/placeholder.svg?height=240&width=426",
+    publishedAt: "2020-05-15",
     duration: "15:42",
-    views: "245K",
+    views: "245K views",
   },
   {
     id: "v2",
     title: "The Future of Large Language Models",
-    thumbnail: "/placeholder.svg?height=120&width=200",
-    publishedAt: "2023-06-22",
+    thumbnail: "/placeholder.svg?height=240&width=426",
+    publishedAt: "2021-06-22",
     duration: "22:18",
-    views: "189K",
+    views: "189K views",
   },
   {
     id: "v3",
     title: "How Transformers Work - Explained Simply",
-    thumbnail: "/placeholder.svg?height=120&width=200",
-    publishedAt: "2023-07-10",
+    thumbnail: "/placeholder.svg?height=240&width=426",
+    publishedAt: "2022-07-10",
     duration: "18:05",
-    views: "312K",
+    views: "312K views",
   },
   {
     id: "v4",
     title: "Building Your First Machine Learning Model",
-    thumbnail: "/placeholder.svg?height=120&width=200",
-    publishedAt: "2023-08-05",
+    thumbnail: "/placeholder.svg?height=240&width=426",
+    publishedAt: "2021-08-05",
     duration: "25:30",
-    views: "178K",
+    views: "178K views",
   },
   {
     id: "v5",
     title: "Data Science Career Paths in 2023",
-    thumbnail: "/placeholder.svg?height=120&width=200",
+    thumbnail: "/placeholder.svg?height=240&width=426",
     publishedAt: "2023-09-12",
     duration: "20:15",
-    views: "203K",
+    views: "203K views",
+  },
+  {
+    id: "v6",
+    title: "Python Tips and Tricks for Data Analysis",
+    thumbnail: "/placeholder.svg?height=240&width=426",
+    publishedAt: "2022-11-18",
+    duration: "17:45",
+    views: "156K views",
   },
 ]
 
@@ -98,12 +106,11 @@ export default function ChannelsPage() {
   const [newChannelUrl, setNewChannelUrl] = useState("")
   const [isAddingChannel, setIsAddingChannel] = useState(false)
   const [selectedVideos, setSelectedVideos] = useState<string[]>([])
+  const [activeTab, setActiveTab] = useState("channels")
 
   const handleAddChannel = () => {
-    // In a real app, this would validate and fetch channel data from YouTube API
     if (!newChannelUrl) return
 
-    // Mock adding a new channel
     const newChannel = {
       id: `new-${Date.now()}`,
       name: "New Channel",
@@ -130,10 +137,19 @@ export default function ChannelsPage() {
   }
 
   const handleProcessVideos = () => {
-    // In a real app, this would send the selected videos for processing
     console.log("Processing videos:", selectedVideos)
-    // Reset selection after processing
     setSelectedVideos([])
+  }
+
+  const handleSelectChannel = (channelId: string) => {
+    if (selectedChannel === channelId) {
+      // Unselect if already selected
+      setSelectedChannel(null)
+    } else {
+      // Select new channel
+      setSelectedChannel(channelId)
+      setActiveTab("videos")
+    }
   }
 
   const filteredChannels = channels.filter(
@@ -144,11 +160,13 @@ export default function ChannelsPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">Channels</h1>
-          <p className="text-muted-foreground">Manage YouTube channels and select videos for processing</p>
-        </div>
+      <div>
+        <h1 className="text-2xl font-bold tracking-tight">Channels</h1>
+        <p className="text-muted-foreground">Manage YouTube channels and select videos for processing</p>
+      </div>
+
+      <div className="flex justify-between items-center">
+        <div></div>
         <Dialog open={isAddingChannel} onOpenChange={setIsAddingChannel}>
           <DialogTrigger asChild>
             <Button className="gap-1">
@@ -182,10 +200,10 @@ export default function ChannelsPage() {
         </Dialog>
       </div>
 
-      <Tabs defaultValue="channels" className="w-full">
+      <Tabs value={activeTab} onValueChange={setActiveTab}>
         <TabsList>
           <TabsTrigger value="channels">My Channels</TabsTrigger>
-          {selectedChannel && <TabsTrigger value="videos">Channel Videos</TabsTrigger>}
+          <TabsTrigger value="videos">Channel Videos</TabsTrigger>
         </TabsList>
 
         <TabsContent value="channels" className="mt-4 space-y-4">
@@ -204,8 +222,9 @@ export default function ChannelsPage() {
               <ChannelCard
                 key={channel.id}
                 channel={channel}
-                onSelect={() => setSelectedChannel(channel.id)}
+                onSelect={() => handleSelectChannel(channel.id)}
                 onRemove={() => handleRemoveChannel(channel.id)}
+                isSelected={selectedChannel === channel.id}
               />
             ))}
 
@@ -222,23 +241,29 @@ export default function ChannelsPage() {
           </div>
         </TabsContent>
 
-        {selectedChannel && (
-          <TabsContent value="videos" className="mt-4">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-xl font-semibold">{channels.find((c) => c.id === selectedChannel)?.name} Videos</h2>
-              <div className="flex items-center gap-2">
-                <Button variant="outline" onClick={() => setSelectedVideos([])} disabled={selectedVideos.length === 0}>
-                  Clear Selection
-                </Button>
-                <Button onClick={handleProcessVideos} disabled={selectedVideos.length === 0}>
-                  Process {selectedVideos.length} {selectedVideos.length === 1 ? "Video" : "Videos"}
-                </Button>
-              </div>
+        <TabsContent value="videos" className="mt-4">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-semibold">
+              {selectedChannel ? `${channels.find((c) => c.id === selectedChannel)?.name} Videos` : "Channel Videos"}
+            </h2>
+            <div className="flex items-center gap-2">
+              <Button variant="outline" onClick={() => setSelectedVideos([])} disabled={selectedVideos.length === 0}>
+                Clear Selection
+              </Button>
+              <Button onClick={handleProcessVideos} disabled={selectedVideos.length === 0}>
+                Process {selectedVideos.length} {selectedVideos.length === 1 ? "Video" : "Videos"}
+              </Button>
             </div>
+          </div>
 
+          {selectedChannel ? (
             <VideoList videos={mockVideos} selectedVideos={selectedVideos} onSelectVideo={handleSelectVideo} />
-          </TabsContent>
-        )}
+          ) : (
+            <div className="flex h-60 items-center justify-center rounded-md border border-dashed">
+              <p className="text-muted-foreground">Select a channel to view videos</p>
+            </div>
+          )}
+        </TabsContent>
       </Tabs>
     </div>
   )

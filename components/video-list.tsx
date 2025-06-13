@@ -20,41 +20,41 @@ interface VideoListProps {
 
 export function VideoList({ videos, selectedVideos, onSelectVideo, className }: VideoListProps) {
   return (
-    <div className={`space-y-3 w-full ${className || ""}`}>
+    <div className={`grid gap-6 sm:grid-cols-2 lg:grid-cols-3 ${className || ""}`}>
       {videos.map((video) => (
-        <Card key={video.id} className="overflow-hidden w-full">
-          <CardContent className="p-0">
-            <div className="flex items-center gap-4 p-4 w-full">
-              <Checkbox
-                id={`video-${video.id}`}
-                checked={selectedVideos.includes(video.id)}
-                onCheckedChange={() => onSelectVideo(video.id)}
+        <div key={video.id} className="relative group">
+          <div className="absolute top-3 left-3 z-10 h-5 w-5 flex items-center justify-center">
+            <Checkbox
+              id={`video-${video.id}`}
+              checked={selectedVideos.includes(video.id)}
+              onCheckedChange={() => onSelectVideo(video.id)}
+              className="h-5 w-5 bg-white/90 border-transparent data-[state=checked]:translate-y-0"
+            />
+          </div>
+          <Card className="overflow-hidden border-0 shadow-sm hover:shadow-md transition-shadow">
+            <div className="relative aspect-video overflow-hidden bg-muted">
+              <img
+                src={video.thumbnail || "/placeholder.svg"}
+                alt={video.title}
+                className="h-full w-full object-cover"
               />
-              <div className="relative h-20 w-36 flex-shrink-0 overflow-hidden rounded-md">
-                <img
-                  src={video.thumbnail || "/placeholder.svg"}
-                  alt={video.title}
-                  className="h-full w-full object-cover"
-                />
-                <div className="absolute bottom-1 right-1 rounded bg-black/80 px-1 py-0.5 text-xs text-white">
-                  {video.duration}
-                </div>
-              </div>
-              <div className="flex-1 overflow-hidden">
-                <h3 className="line-clamp-2 font-medium">{video.title}</h3>
-                <div className="mt-1 flex items-center gap-2 text-xs text-muted-foreground">
-                  <span>{video.views} views</span>
-                  <span>•</span>
-                  <span>{formatDate(video.publishedAt)}</span>
-                </div>
+              <div className="absolute bottom-2 right-2 rounded bg-black/80 px-1.5 py-0.5 text-xs text-white">
+                {video.duration}
               </div>
             </div>
-          </CardContent>
-        </Card>
+            <CardContent className="p-3">
+              <h3 className="font-medium line-clamp-2 text-base">{video.title}</h3>
+              <div className="mt-1 flex flex-col text-xs text-muted-foreground">
+                <span>{video.views} views</span>
+                <span>{formatDate(video.publishedAt)}</span>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
       ))}
 
       {videos.length === 0 && (
-        <div className="flex h-40 items-center justify-center rounded-md border border-dashed">
+        <div className="col-span-full flex h-40 items-center justify-center rounded-md border border-dashed">
           <p className="text-muted-foreground">No videos found for this channel</p>
         </div>
       )}

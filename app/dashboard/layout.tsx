@@ -8,10 +8,10 @@ export default function DashboardLayout({
   children: React.ReactNode
 }) {
   return (
-    <div className="flex min-h-screen">
+    <div className="flex min-h-screen w-full">
       <AppSidebar />
-      <div className="flex flex-1 flex-col">
-        <header className="sticky top-0 z-10 flex h-14 items-center border-b bg-background px-4 lg:px-6">
+      <div className="flex flex-1 flex-col w-full">
+        <header className="sticky top-0 z-10 flex h-14 w-full items-center border-b bg-background px-4 lg:px-6">
           <SidebarTrigger />
           <div className="ml-auto flex items-center gap-2">
             <div className="flex items-center gap-2">
@@ -22,7 +22,7 @@ export default function DashboardLayout({
             </div>
           </div>
         </header>
-        <main className="flex-1 p-6">{children}</main>
+        <main className="flex-1 w-full p-6">{children}</main>
       </div>
     </div>
   )
