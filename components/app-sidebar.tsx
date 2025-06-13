@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { Home, FileText, User, LogOut, Youtube } from "lucide-react"
+import { Home, Video, User, LogOut, Youtube } from "lucide-react"
 import {
   Sidebar,
   SidebarContent,
@@ -23,14 +23,19 @@ export function AppSidebar() {
       href: "/dashboard",
     },
     {
-      title: "Processed",
-      icon: FileText,
-      href: "/dashboard/processed-videos",
+      title: "My Videos",
+      icon: Video,
+      href: "/dashboard/videos",
     },
     {
       title: "Channels",
       icon: Youtube,
       href: "/dashboard/channels",
+    },
+    {
+      title: "Profile",
+      icon: User,
+      href: "/dashboard/profile",
     },
   ]
 
@@ -62,14 +67,6 @@ export function AppSidebar() {
 
       <SidebarFooter>
         <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton asChild tooltip="Profile" isActive={pathname === "/dashboard/profile"}>
-              <Link href="/dashboard/profile">
-                <User className="h-5 w-5" />
-                <span>Profile</span>
-              </Link>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
           <SidebarMenuItem>
             <SidebarMenuButton asChild tooltip="Logout">
               <Link href="/">

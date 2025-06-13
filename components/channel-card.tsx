@@ -3,7 +3,6 @@
 import { Card, CardContent, CardFooter } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Trash2 } from "lucide-react"
-import { cn } from "@/lib/utils"
 
 interface Channel {
   id: string
@@ -18,17 +17,11 @@ interface ChannelCardProps {
   channel: Channel
   onSelect: () => void
   onRemove: () => void
-  isSelected: boolean
 }
 
-export function ChannelCard({ channel, onSelect, onRemove, isSelected }: ChannelCardProps) {
+export function ChannelCard({ channel, onSelect, onRemove }: ChannelCardProps) {
   return (
-    <Card
-      className={cn(
-        "overflow-hidden transition-all hover:shadow-md",
-        isSelected ? "border-primary border-2" : "border",
-      )}
-    >
+    <Card className="overflow-hidden transition-all hover:shadow-md">
       <CardContent className="p-0">
         <div className="flex cursor-pointer items-center gap-4 p-4" onClick={onSelect}>
           <div className="h-16 w-16 overflow-hidden rounded-full">
